@@ -807,6 +807,15 @@
 			grid-template-columns: 1fr;
 		}
 
+		.detail-preview {
+			min-height: 240px;
+			padding: 24px;
+		}
+
+		.detail-controls {
+			padding: 24px;
+		}
+
 		.shape-grid {
 			grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
 		}

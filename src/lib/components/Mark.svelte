@@ -122,6 +122,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 32px;
+		min-width: 0;
 	}
 
 	.control-group {
@@ -143,6 +144,7 @@
 		background: rgba(255,255,255,0.08);
 		padding: 4px;
 		border-radius: 8px;
+		max-width: 100%;
 	}
 
 	.variant-btn {
@@ -159,6 +161,7 @@
 		transition: all 0.2s;
 		text-transform: uppercase;
 		flex: 1;
+		min-width: 0;
 	}
 
 	.variant-btn.active {
@@ -170,6 +173,7 @@
 		display: flex;
 		gap: 12px;
 		flex-wrap: wrap;
+		max-width: 100%;
 	}
 
 	.download-bar {
@@ -177,12 +181,14 @@
 		flex-direction: column;
 		gap: 8px;
 		margin-top: 8px;
+		max-width: 100%;
 	}
 
 	.download-row {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 8px;
+		max-width: 100%;
 	}
 
 	.download-row .btn {
@@ -193,6 +199,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		min-width: 0;
 	}
 
 	.preview-card {
@@ -254,6 +261,23 @@
 			flex-direction: column;
 			align-items: center;
 			gap: 16px;
+		}
+	}
+
+	@media (max-width: 500px) {
+		.variant-btn {
+			font-size: 10px;
+			padding: 8px 10px;
+			letter-spacing: 1px;
+		}
+
+		.download-row .btn {
+			padding: 12px 16px;
+			font-size: 10px;
+		}
+
+		.preview-card {
+			padding: 24px;
 		}
 	}
 </style>
