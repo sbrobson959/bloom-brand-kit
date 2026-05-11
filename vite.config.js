@@ -11,5 +11,8 @@ export default defineConfig({
 				await generateZips();
 			}
 		}
-	]
+	],
+	server: {
+		allowedHosts: true
+	}
 });
