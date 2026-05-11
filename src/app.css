@@ -1,0 +1,234 @@
+/* ============================================
+   Bloom Juice Room — Global Styles
+   ============================================ */
+
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --carrot: #FE6705;
+  --kiwi: #C7D62A;
+  --lychee: #FD7699;
+
+  --font: 'Comfortaa', sans-serif;
+
+  --content-max: 1200px;
+  --section-py: 140px;
+  --section-px: 24px;
+  --radius: 16px;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 70px;
+}
+
+body {
+  font-family: var(--font);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--black);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font);
+}
+
+/* Utility classes */
+.container {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.section {
+  padding: var(--section-py) var(--section-px);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-black {
+  background: var(--black);
+  color: var(--white);
+}
+
+.section-white {
+  background: var(--white);
+  color: var(--black);
+}
+
+.section-heading {
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 18px;
+  opacity: 0.65;
+  max-width: 600px;
+  margin-bottom: 60px;
+  font-weight: 400;
+}
+
+.section-black .section-sub {
+  color: rgba(255,255,255,0.65);
+}
+
+.section-white .section-sub {
+  color: rgba(0,0,0,0.65);
+}
+
+/* Reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--carrot);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: #e05a00;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.btn-outline:hover {
+  border-color: var(--white);
+  transform: translateY(-2px);
+}
+
+.btn-outline-dark {
+  background: transparent;
+  color: var(--black);
+  border: 2px solid rgba(0,0,0,0.2);
+}
+
+.btn-outline-dark:hover {
+  border-color: var(--black);
+  transform: translateY(-2px);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--black);
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  z-index: 200;
+  opacity: 0;
+  transition: all 0.4s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Color dots */
+.color-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.color-dot:hover {
+  transform: scale(1.15);
+}
+
+.color-dot.active {
+  border-color: var(--white);
+  box-shadow: 0 0 0 3px var(--black), 0 0 0 5px var(--white);
+  transform: scale(1.1);
+}
+
+.color-dot.active-light {
+  border-color: var(--black);
+  box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--black);
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :root {
+    --section-py: 80px;
+    --section-px: 16px;
+  }
+
+  .section-heading {
+    font-size: 32px;
+    letter-spacing: 2px;
+  }
+
+  .section-sub {
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+}
