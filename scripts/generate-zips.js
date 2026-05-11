@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
 import JSZip from 'jszip';
+import { Resvg } from '@resvg/resvg-js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = path.resolve(__dirname, '../static/assets');
@@ -118,34 +118,32 @@ export async function generateZips() {
 	const flowersSvgBuffer = await flowersSvgZip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
 	fs.writeFileSync(path.join(zipsDir, 'flowers-svg.zip'), flowersSvgBuffer);
 	console.log(`Generated flowers-svg.zip (${missingDuals.length} missing duals added)`);
-	// Try to generate PNGs for missing duals (rsvg-convert may not be available in all environments)
-	let pngsGenerated = 0;
-	try {
-		execSync('which rsvg-convert', { stdio: 'ignore' });
-		const pngTempDir = path.join(zipsDir, '.tmp-png');
-		ensureDir(pngTempDir);
-		missingDuals.forEach(({ petal, center, file }) => {
-			const svgPath = path.join(pngTempDir, file);
-			const pngFile = file.replace('.svg', '.png');
-			fs.writeFileSync(svgPath, generateDualSvg(dualTemplate, FLOWER_COLORS[petal], FLOWER_COLORS[center]));
-			execSync(`rsvg-convert "${svgPath}" -o "${path.join(pngTempDir, pngFile)}"`, { stdio: 'ignore' });
-			pngsGenerated++;
-		});
-		// Regenerate flowers-png.zip with generated PNGs
-		const flowersPngZip = new JSZip();
-		addFilesToZip(flowersPngZip, path.join(assetsDir, 'flowers/png'));
-		fs.readdirSync(pngTempDir).forEach(f => {
-			if (f.endsWith('.png')) {
-				flowersPngZip.file(f, fs.readFileSync(path.join(pngTempDir, f)));
-			}
-		});
-		const flowersPngBuffer = await flowersPngZip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
-		fs.writeFileSync(path.join(zipsDir, 'flowers-png.zip'), flowersPngBuffer);
-		console.log(`Generated flowers-png.zip (${pngsGenerated} missing dual PNGs added)`);
-		fs.rmSync(pngTempDir, { recursive: true, force: true });
-	} catch {
-		console.log('rsvg-convert not available — missing dual PNGs omitted from flowers-png.zip');
-	}
+	// Generate PNGs for missing duals using @resvg/resvg-js
+	const pngTempDir = path.join(zipsDir, '.tmp-png');
+	ensureDir(pngTempDir);
+	missingDuals.forEach(({ petal, center, file }) => {
+		const svgContent = generateDualSvg(dualTemplate, FLOWER_COLORS[petal], FLOWER_COLORS[center]);
+		const pngFile = file.replace('.svg', '.png');
+		try {
+			const resvg = new Resvg(svgContent, { fitTo: { mode: 'original' } });
+			const pngBuffer = resvg.render().asPng();
+			fs.writeFileSync(path.join(pngTempDir, pngFile), pngBuffer);
+		} catch (e) {
+			console.warn(`  PNG generation failed for ${file}: ${e.message}`);
+		}
+	});
+	// Regenerate flowers-png.zip with generated PNGs
+	const flowersPngZip = new JSZip();
+	addFilesToZip(flowersPngZip, path.join(assetsDir, 'flowers/png'));
+	fs.readdirSync(pngTempDir).forEach(f => {
+		if (f.endsWith('.png')) {
+			flowersPngZip.file(f, fs.readFileSync(path.join(pngTempDir, f)));
+		}
+	});
+	const flowersPngBuffer = await flowersPngZip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
+	fs.writeFileSync(path.join(zipsDir, 'flowers-png.zip'), flowersPngBuffer);
+	console.log(`Generated flowers-png.zip (with missing dual PNGs)`);
+	fs.rmSync(pngTempDir, { recursive: true, force: true });
 
 	// Fonts
 	const fontsZip = new JSZip();
